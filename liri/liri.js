@@ -141,15 +141,18 @@ axios
 // data.split(', ')[1]
 // spotify(data.split(', ')[1])
 function doWhatItSays() {
-  var fs = require("fs");
   // read random.txt
-  fs.readFile("random.txt", "utf8", function(error, data) {
-    if (error) {
-      return console.log("ERROR! " + error);
+  fs.readFile("./random.txt", "utf8", function(err, data) {
+    if (err) {
+      return console.log("ERROR! " + err);
     }
     var whatItSays = data.split(",");
-    userCommand = whatItSays[0];
-    userChoice = whatItSays.slice(1).join(" ");
+
+    // userCommand = whatItSays[0];
+    // userChoice = whatItSays.slice(1).join(" ");
+
+    console.log(whatItSays);
+
     switch (userCommand) {
       case "Do-What-It-Says":
         doWhatItSays();
