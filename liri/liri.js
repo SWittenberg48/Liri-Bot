@@ -4,22 +4,11 @@
 // install all the given packages
 // require("dotenv").config();
 // require keys.js
-// var keys = require("./keys.js");
-// * [Node-Spotify-API](https://www.npmjs.com/package/node-spotify-api)
-
-// * [Axios](https://www.npmjs.com/package/axios)
-
-//   * You'll use Axios to grab data from the [OMDB API](http://www.omdbapi.com) and the [Bands In Town API](http://www.artists.bandsintown.com/bandsintown-api)
-
-// * [Moment](https://www.npmjs.com/package/moment)
-
-// * [DotEnv](https://www.npmjs.com/package/dotenv)
 
 require("dotenv").config();
 var keys = require("./keys.js");
 var fs = require("fs");
 var axios = require("axios");
-// var movieName = require("omdb");
 var spotify = require("node-spotify-api");
 var spotify = new spotify(keys.spotify);
 var moment = require("moment");
@@ -27,30 +16,7 @@ var moment = require("moment");
 // user command choice( process.argv prompt inquirer)
 var userCommand = process.argv[2];
 var userChoice = process.argv.slice(3).join(" ");
-// userChoice for movie/song/concert
-// var userChoice = {
-//     type: 'list',
-//     name: 'command',
-//     message: 'What would you like me to do?',
-//     choices: [
-//         {
-//             name: 'Check Band in Town?',
-//             value: 'concert-this'
-//         },
-//         {
-//             name: 'Spotify this Song?',
-//             value: 'spotify-this-song'
-//         },
-//         {
-//             name: 'Movie This?',
-//             value: 'movie-this'
-//         },
-//         {
-//             name: 'Do What It Says?',
-//             value: 'do-what-it-says'
-//         }
-//     ]
-// };
+
 // check for user command
 // if or switch
 switch (userCommand) {
@@ -145,7 +111,7 @@ function movieThis() {
 function concertThis() {
   console.log(userChoice);
 }
-var concertURL = `https://rest.bandsintown.com/artists/=${userChoice}/events?app_id=320433d2-5e97-4df9-9378-c85ca8698a68`;
+var concertURL = `https://rest.bandsintown.com/artists/${userChoice}/events?app_id=320433d2-5e97-4df9-9378-c85ca8698a68`;
 axios
   .get(concertURL)
 
@@ -175,16 +141,31 @@ axios
 // data.split(', ')[1]
 // spotify(data.split(', ')[1])
 function doWhatItSays() {
-  fs.readFile("random.txt", "utf8", function(err, data) {
-    if (err) {
-      return console.log("ERROR" + err);
+  var fs = require("fs");
+  // read random.txt
+  fs.readFile("random.txt", "utf8", function(error, data) {
+    if (error) {
+      return console.log("ERROR! " + error);
     }
     var whatItSays = data.split(",");
     userCommand = whatItSays[0];
     userChoice = whatItSays.slice(1).join(" ");
-    data = {
-      command: data[0],
-      query: data[1]
-    };
+    switch (userCommand) {
+      case "Do-What-It-Says":
+        doWhatItSays();
+        break;
+
+      case "Concert-this":
+        concertThis();
+        break;
+
+      case "Spotify-this":
+        spotifyThis();
+        break;
+
+      case "Movie-this":
+        movieThis();
+        break;
+    }
   });
 }
